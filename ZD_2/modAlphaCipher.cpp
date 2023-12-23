@@ -21,6 +21,9 @@ string modAlphaCipher::decrypt(const std::string& cipher_stroka)              //
     }
     return ocs;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string modAlphaCipher::encrypt(const string& open_stroka)                     //зашифрование
 {
     string s = getValidText(open_stroka);
@@ -41,6 +44,8 @@ string modAlphaCipher::encrypt(const string& open_stroka)                     //
     return ocs;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline std::string modAlphaCipher::getValidText(const std::string & s)
 {
     string tmp;
@@ -50,10 +55,7 @@ inline std::string modAlphaCipher::getValidText(const std::string & s)
                 tmp.push_back(toupper(c));
                 else
                     tmp.push_back(c);
+        }
     }
-}
-
-if (tmp.empty())
-    throw cipher_error ("Empty open text");
     return tmp;
 }
