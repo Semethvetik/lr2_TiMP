@@ -28,6 +28,6 @@ int main()
     check("THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG","");
     check("THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG","123");
     check("THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG","69");
-    check("123","69");
+    check("123","87");
     return 0;
 }
