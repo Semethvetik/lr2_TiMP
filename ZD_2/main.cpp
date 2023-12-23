@@ -22,7 +22,7 @@ void check(const string& Text, const string& key)
     cout << "" << endl;
 }
 
-int main(int argc, char **argv)
+int main()
 {
     check("THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG","0");
     check("THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG","");
