@@ -48,14 +48,19 @@ string modAlphaCipher::encrypt(const string& open_stroka)                     //
 
 inline std::string modAlphaCipher::getValidText(const std::string & s)
 {
-    string tmp;
-    for (auto c:s) {
-        if (isalpha (c)) {
-            if (islower (c))
-                tmp.push_back(toupper(c));
-                else
-                    tmp.push_back(c);
+	if (s.empty()) {
+        throw cipher_error("Input text cannot be empty");
+    }
+    
+    if (static_cast<std::string::size_type>(kolvostolbov) > s.length()) {
+        throw cipher_error("Invalid key");
+    }
+    
+    for (char c : s) {
+        if (!isalpha(c)) {
+            throw cipher_error("Invalid characters");
         }
     }
-    return tmp;
+    
+    return s;
 }
