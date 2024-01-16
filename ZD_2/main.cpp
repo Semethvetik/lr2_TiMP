@@ -24,10 +24,11 @@ void check(const string& Text, const string& key)
 
 int main()
 {
-    check("THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG","0");
-    check("THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG","");
-    check("THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG","123");
-    check("THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG","69");
-    check("123","87");
+    check("BIGPINKPIG","0");
+    check("BIGPINKPIG","-8");
+    check("BIGPINKPIG","6");
+    check("BIG&PINK&PIG","9");
+    check("BigPinkPig","8");
+    check("123","6");
     return 0;
 }
