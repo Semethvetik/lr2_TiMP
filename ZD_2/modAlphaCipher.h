@@ -13,13 +13,15 @@ class modAlphaCipher
 {
 private:
     int kolvostolbov;
-    string getValidText(const std::string & s);
+    
 public:
     modAlphaCipher() = delete;
     modAlphaCipher(const int& key) :kolvostolbov(key) {};    //конструктор
     string encrypt(const string& open_stroka);               //зашифрование
     string decrypt(const string& cipher_stroka);             //расшифрование
+    string getValidText(const std::string & s);
 };
+
 class cipher_error: public std::invalid_argument
 {
 public:
