@@ -1,129 +1,107 @@
-#include <vector>
-#include <string>
-#include <map>
-#include <iostream>
 #include "modAlphaCipher.h"
-
 using namespace std;
 
-std::wstring numAlpha = L"АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
-std::map <wchar_t, int> alphaNum;
+//////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////
-
-modAlphaCipher::modAlphaCipher(const std::wstring& skey)
+modAlphaCipher::modAlphaCipher(const wstring& wskey)
 {
-    for (unsigned i = 0; i < numAlpha.size(); i++) {
-        alphaNum[numAlpha[i]] = i;
+    for (unsigned i=0; i<numAlpha.size(); i++) {
+        alphaNum[numAlpha[i]]=i;
     }
-    key = convert(getValidKey(skey));
-
+    key = convert(getValidKey(wskey));
 }
 
-///////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
-std::wstring modAlphaCipher::encrypt(const std::wstring& open_text)
+wstring modAlphaCipher::encrypt(const wstring& open_text)
 {
-    std::vector<int> work = convert(getValidOpenText(open_text));
+    vector<int> work = convert(getValidOpenText(open_text));
     for(unsigned i=0; i < work.size(); i++) {
         work[i] = (work[i] + key[i % key.size()]) % alphaNum.size();
     }
     return convert(work);
 }
 
-///////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
-std::wstring modAlphaCipher::decrypt(const std::wstring& cipher_text)
+wstring modAlphaCipher::decrypt(const wstring& cipher_text)
 {
-    std::vector<int> work = convert(getValidCipherText(cipher_text));
+    vector<int> work = convert(getValidCipherText(cipher_text));
     for(unsigned i=0; i < work.size(); i++) {
         work[i] = (work[i] + alphaNum.size() - key[i % key.size()]) % alphaNum.size();
     }
     return convert(work);
 }
 
-///////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
-inline std::vector<int> modAlphaCipher::convert(const std::wstring& str)
+inline vector<int> modAlphaCipher::convert(const wstring& ws)
 {
-    std::vector<int> result;
-    for(auto c:str) {
+    vector<int> result;
+    for(auto c:ws) {
         result.push_back(alphaNum[c]);
     }
     return result;
 }
 
-///////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
-inline std::wstring modAlphaCipher::convert(const std::vector<int>& v)
+inline wstring modAlphaCipher::convert(const vector<int>& v)
 {
-    std::wstring result;
+    wstring result;
     for(auto i:v) {
         result.push_back(numAlpha[i]);
     }
     return result;
 }
 
-///////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
-inline std::wstring modAlphaCipher::getValidKey(const std::wstring & in)
+inline wstring modAlphaCipher::getValidKey(const wstring & ws)
 {
-    if (in.empty()) throw cipher_error("Empty key");
-
-    wstring output;
-    std::locale loc("ru_RU.UTF-8");
-
-    for (wchar_t c : in) {
-        if (c >= L'А' && c <= L'Я') {
-            output += c;
-        } else if (c >= L'а' && c <= L'я') {
-            output += toupper(c, loc);
-        } else {
-            throw cipher_error("Invalid key");
+    if (ws.empty())
+        throw cipher_error("Empty key!");
+    wstring tmp(ws);
+    string s = codec.to_bytes(ws);
+    for (auto & c:tmp) {
+        if (!iswalpha(c)) {
+            throw cipher_error(string("Invalid key ") + "'" + s + "'" + "!");
         }
+        if (iswlower(c))
+            c = towupper(c);
     }
-
-    return output;
+    return tmp;
 }
 
-///////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
-inline std::wstring modAlphaCipher::getValidOpenText(const std::wstring & in)
+inline wstring modAlphaCipher::getValidOpenText(const wstring & ws)
 {
-    if (in.empty()) throw cipher_error("Empty Open Text");
 
-    wstring output;
-    std::locale loc("ru_RU.UTF-8");
-
-    for (wchar_t c : in) {
-        if (c >= L'А' && c <= L'Я') {
-            output += c;
-        } else if (c >= L'а' && c <= L'я') {
-            output += toupper(c, loc);
-        } else {
-            throw cipher_error("Invalid Open Text");
+    wstring tmp;
+    for (auto c:ws) {
+        if (iswalpha(c)) {
+            if (iswlower(c))
+                tmp.push_back(towupper(c));
+            else
+                tmp.push_back(c);
         }
     }
-
-    return output;
+    if (tmp.empty())
+        throw cipher_error("Empty text!");
+    return tmp;
 }
 
-///////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
-inline std::wstring modAlphaCipher::getValidCipherText(const std::wstring & in)
+inline wstring modAlphaCipher::getValidCipherText(const wstring & ws)
 {
-    if (in.empty()) throw cipher_error("Empty Cipher Text");
-
-    wstring output;
-    std::locale loc("ru_RU.UTF-8");
-
-    for (wchar_t c : in) {
-        if (c >= L'А' && c <= L'Я') {
-            output += c;
-        } else {
-            throw cipher_error("Invalid Cipher Text");
-        }
+    if (ws.empty())
+        throw cipher_error("Empty text!");
+    for (auto c:ws) {
+        string s = codec.to_bytes(ws);
+        if (!iswupper(c))
+            throw cipher_error(string("Invalid text ") + "'" + s + "'" + "!");
     }
-
-    return output;
+    return ws;
 }
